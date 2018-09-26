@@ -8,6 +8,8 @@ from collections import defaultdict
 from torch.utils.data import Dataset
 from nltk.tokenize import TweetTokenizer
 
+from .emoji_handler import *
+
 class TweetData(Dataset):
 	def __init__(self, data_dir, split, **kwargs):
 		super().__init__()
@@ -66,7 +68,7 @@ class TweetData(Dataset):
 				units = line.split('\t')
 				index = int(units[0])
 				text = ' '.join(units[1:4])
-				data[index]['text'] = tokenizer.tokenize(text)
+				data[index]['text'] = tokenizer.tokenize(demojify_v2(text))
 				data[index]['label'] = units[4].strip()
 
 		with open(os.path.join(self.data_dir, self.data_file), 'wb') as data_file:
@@ -83,7 +85,7 @@ class TweetData(Dataset):
 		vocab = defaultdict(int)
 
 		def update_vocab(vocab, text):
-			words = tokenizer.tokenize(text)
+			words = tokenizer.tokenize(demojify_v2(text))
 			for word in words:
 				vocab[word] += 1
 
