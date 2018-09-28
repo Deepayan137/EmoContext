@@ -20,3 +20,11 @@ def demojify_v2(text):
     emoji_list = [c for c in allchars if c in emoji.UNICODE_EMOJI]
     clean_text = ' '.join([str for str in text.split() if not any(i in str for i in emoji_list)])
     return clean_text
+
+
+# What if check text is english and retain it rather than checking for emoji
+# It will also be useful if corpus contains other characters like greek.
+def demojify_v3(text):
+    # For each word in sentence we encode it to ascii and decode it and check if its equal to its original form.
+    output = [i for i in text.split() if (i == i.encode("ascii", errors="ignore").decode())]
+    return ' '.join(output)
