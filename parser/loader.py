@@ -8,7 +8,8 @@ from collections import defaultdict
 from torch.utils.data import Dataset
 from nltk.tokenize import TweetTokenizer
 
-from .emoji_handler import *
+from emoji_handler import *
+from embedder import *
 
 class TweetData(Dataset):
 	def __init__(self, data_dir, split, **kwargs):
@@ -70,6 +71,7 @@ class TweetData(Dataset):
 				text = ' '.join(units[1:4])
 				data[index]['text'] = tokenizer.tokenize(demojify_v2(text))
 				data[index]['label'] = units[4].strip()
+				data[index]['embeds'] = get_embeds(data[index]['text'])
 
 		with open(os.path.join(self.data_dir, self.data_file), 'wb') as data_file:
 			# data = json.dump(data, data_file, ensure_ascii=False)
