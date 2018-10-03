@@ -9,16 +9,11 @@ import os.path
 # Download twitter embeddings from http://nlp.stanford.edu/data/glove.twitter.27B.zip
 
 # If glove embeds is not in word2vec form then first convert it then load it
-if os.path.isfile('pretrained_embeds/gensim_glove_vectors.txt'):
-    glove_model = KeyedVectors.load_word2vec_format("pretrained_embeds/gensim_glove_vectors.txt", binary=False)
-else:
-    glove2word2vec(glove_input_file="pretrained_embeds/glove.twitter.27B.50d.txt", word2vec_output_file="pretrained_embeds/gensim_glove_vectors.txt")
-    glove_model = KeyedVectors.load_word2vec_format("pretrained_embeds/gensim_glove_vectors.txt", binary=False)
 
-translator = str.maketrans('', '', string.punctuation)
 
-def get_embeds(word_list):
-    
+def get_embeds(glove_model, word_list):
+    translator = str.maketrans('', '', string.punctuation)
+
     embed_mat = []
     
     for word in word_list:
@@ -29,11 +24,12 @@ def get_embeds(word_list):
             # Remove punctuations
             word = word.translate(translator)
             # if word is not empty string
-            if word:
+            if word in glove_model.vocab:
                 try:
                     embed_mat.append(glove_model.get_vector(word))
-                except:
-                    embed_mat.append(glove_model.get_vector('unk'))
+                except Exception as e:
+                    print(e)
+                    
     return np.asarray(embed_mat)
 
 
