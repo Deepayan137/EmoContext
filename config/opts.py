@@ -4,17 +4,19 @@ class Config:
     # data
     path = 'data/'
     lr = 1e-3
-    _in = 50
+    inp = 25
     hidden = 256
     out = 4
     depth = 2
     epochs = 20
+    filters = 100
     save_dir = 'saves'
-    save_file =  'emo_model.t7'
-    lmap = {'Happy': 0,
-            'Sad': 1,
-            'Angry': 2,
-            'Others': 3
+    save_file =  '%d_emo_model.t7'%inp
+    
+    lmap = {'happy': 0,
+            'sad': 1,
+            'angry': 2,
+            'others': 3
             }
     def _parse(self, kwargs):
         state_dict = self._state_dict()

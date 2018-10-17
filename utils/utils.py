@@ -1,7 +1,7 @@
 import os
 import torch
 import numpy as np
-import torch
+import pdb
 
 
 def convert_toTensor(pairs):
@@ -35,6 +35,23 @@ def save_checkpoint(state, filename, is_best):
         print("=> Validation Accuracy did not improve")
 
 
+
+# def pad_seq(data):
+
+#     def max_len():
+#         lengths = [data.data[i]['length'] for i in range(len(data))]
+#         return max(lengths)
+#     # pdb.set_trace()
+#     max_length = max_len()
+#     for idx in data.data:
+#         length = data.data[idx]['length']
+#         difference = max_length - length
+#         vector_size = data.data[idx]['feature'].shape[1]
+#         padding = np.zeros((difference, vector_size), dtype=np.float32)
+#         data.data[idx]['feature'] = np.concatenate((data.data[idx]['feature'], padding),axis=0)
+#     return data
+
+from sklearn.metrics import f1_score
 class Eval:
     def __init__(self, lmap):
 
@@ -51,7 +68,11 @@ class Eval:
         if prediction == target:
             return 1.0
         return 0.0
-
+    def f1(self, prediction, target):
+        prediction = self.decode(prediction)
+        prediction = prediction.cpu().numpy()
+        target = target.cpu().numpy()
+        return f1_score(target, prediction, average='weighted')
 class AverageMeter:
     def __init__(self, name):
         self.name = name

@@ -15,10 +15,12 @@ class TweetData(Dataset):
 		super().__init__()
 		self.data_dir = data_dir
 		self.split = split
+		self.vector_size = kwargs['vector_size']
 		self.raw_data_path = os.path.join(data_dir, split+'.txt')
-		self.data_file = split+'.pkl'
+		self.data_file = split+ self.vector_size +'.pkl'
 		self.vocab_file = 'vocab.pkl'
 		self.lmap = lmap
+		
 		if not os.path.exists(os.path.join(self.data_dir, self.data_file)):
 			print('creating for %s'%split)
 			self.glove_model = self.load_gensim()
@@ -33,29 +35,33 @@ class TweetData(Dataset):
 		return len(self.data)
 
 	def __getitem__(self, idx):
-		idx = str(idx)
+		# idx = str(idx)
+
 		if self.split == 'test':
 			return {
 				'input': self.data[idx]['input'],
-				'feature': self.data[idx]['target']
+				'feature': self.data[idx]['target'],
+				'length': self.data[idx]['length']
 				}
 		return {
 			'input': self.data[idx]['input'],
 			'target': self.data[idx]['target'],
-			'feature': self.data[idx]['feature']
+			'feature': self.data[idx]['feature'],
+			'length':  self.data[idx]['length']
 			}
 
 	def load_gensim(self):
-		if os.path.isfile('data/gensim_glove_vectors.txt'):
+
+		if os.path.isfile('data/gensim_glove_%s_vectors.txt'%self.vector_size):
 			print('loading...')
-			glove_model = KeyedVectors.load_word2vec_format("data/gensim_glove_vectors.txt", 
+			glove_model = KeyedVectors.load_word2vec_format('data/gensim_glove_%s_vectors.txt'%self.vector_size, 
 															binary=False)
 		else:
 			print('converting to word2vec format')
-			glove2word2vec(glove_input_file="data/glove.twitter.27B.50d.txt", 
-						word2vec_output_file="data/gensim_glove_vectors.txt")
+			glove2word2vec(glove_input_file="data/glove.twitter.27B.%s.txt"%self.vector_size, 
+						word2vec_output_file="data/gensim_glove_%s_vectors.txt"%self.vector_size)
 			print('loading...')
-			glove_model = KeyedVectors.load_word2vec_format("data/gensim_glove_vectors.txt", binary=False)
+			glove_model = KeyedVectors.load_word2vec_format("data/gensim_glove_%s_vectors.txt"%self.vector_size, binary=False)
 		return glove_model
 
 	def _load_vocab(self):
@@ -65,11 +71,28 @@ class TweetData(Dataset):
 
 		self.vocab = vocab
 
-	def _load_data(self, vocab=True):
+	def seq_max_len(self):
+		lengths = [self.data[i]['length'] for i in range(len(self.data))]
+		return max(lengths)
+
+	def pad_seq(self):
+		# max_length = self.seq_max_len()
+		max_length = 156
+		for idx in self.data:
+			length = self.data[idx]['length']
+			difference = max_length - length
+			vector_size = self.data[idx]['feature'].shape[1]
+			padding = np.zeros((difference, vector_size), dtype=np.float32)
+			self.data[idx]['feature'] = np.concatenate((self.data[idx]['feature'], padding),axis=0)
+		
+
+	def _load_data(self, vocab=True, padding=True):
 		
 		with open(os.path.join(self.data_dir, self.data_file), 'rb') as file:
 			# self.data = json.load(file)
 			self.data = pickle.load(file)
+		if padding:
+			self.pad_seq()
 		if vocab:
 			self._load_vocab()
 
@@ -98,7 +121,7 @@ class TweetData(Dataset):
 				if self.split == 'train':
 					data[index]['target'] = self.lmap[units[4].strip()]
 				data[index]['feature'] = self.text2feature(text)
-
+				data[index]['length'] = data[index]['feature'].shape[0]
 
 		with open(os.path.join(self.data_dir, self.data_file), 'wb') as data_file:
 			# data = json.dump(data, data_file, ensure_ascii=False)
