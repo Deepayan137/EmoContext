@@ -1,4 +1,5 @@
 import re
+import unicodedata
 # import emoji
 
 # def demojify(string):
@@ -25,3 +26,28 @@ def demojify_v3(text):
     # For each word in sentence we encode it to ascii and decode it and check if its equal to its original form.
     output = [i for i in text.split() if (i == i.encode("ascii", errors="ignore").decode())]
     return ' '.join(output)
+
+
+def demojify_v4(text):
+	output = []
+
+	for i in text.split():
+		# Check if word is english or not
+		if (i == i.encode("ascii", errors="ignore").decode()):
+			output.append(i)
+		else:
+			# Splitting by emoji from text
+			emo = re.split(r'([^\w\s,])', i)
+			# Remove empty strings
+			emo = list(filter(None, emo))
+			# Eliminating duplicates
+			seen = set()
+			emo = [x for x in emo if not (x in seen or seen.add(x))]
+			# For every unicode get name 
+			for e in emo:
+				try:
+					output = output + (unicodedata.name(e).lower().split())
+				except:
+					output.append(e)
+
+	return ' '.join(output)
