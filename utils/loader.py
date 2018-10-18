@@ -76,8 +76,8 @@ class TweetData(Dataset):
 		return max(lengths)
 
 	def pad_seq(self):
-		# max_length = self.seq_max_len()
-		max_length = 156
+		max_length = self.seq_max_len()
+		# max_length = 156
 		for idx in self.data:
 			length = self.data[idx]['length']
 			difference = max_length - length
@@ -116,7 +116,7 @@ class TweetData(Dataset):
 			for i, line in enumerate(tqdm(lines[1:])):
 				units = line.split('\t')
 				index = int(units[0])
-				text = tokenizer.tokenize(demojify_v3(' '.join(units[1:4])))
+				text = tokenizer.tokenize(demojify_v4(' '.join(units[1:4])))
 				data[index]['input'] = text
 				if self.split == 'train':
 					data[index]['target'] = self.lmap[units[4].strip()]

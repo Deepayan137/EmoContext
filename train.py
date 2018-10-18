@@ -173,7 +173,7 @@ def main(**kwargs):
 	for split in splits:
 		datasets[split] = TweetData(path,split,lmap, vector_size = vector_size)
 	# datasets['train'] = pad_seq(datasets['train'])
-	pdb.set_trace()
+	#pdb.set_trace()
 	epochs = opt.epochs
 	nIn = opt.inp
 	nHidden = opt.hidden	
