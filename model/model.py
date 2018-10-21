@@ -55,4 +55,31 @@ class EmoNet(nn.Module):
         output = self.fc_out(output[-1])
         return output
 
+
+class SepTurn_RNN(nn.Module):
+    def __init__(self, nIn, nHidden, nOut):
+        super(SepTurn_RNN, self).__init__()
+        self.rnn1 = nn.LSTM(nIn, nHidden)
+        self.rnn2 = nn.LSTM(nIn, nHidden)
+        self.rnn3 = nn.LSTM(nIn, nHidden)
+        self.lin =  nn.Linear(nHidden*3, nOut)
+
+    def forward(self, x1, x2, x3):
+        # Use three different RNN for three turns
+        recurrent, (hidden1, c) = self.rnn1(x1)
+        recurrent, (hidden2, c)  = self.rnn2(x2)
+        recurrent, (hidden3, c)  = self.rnn3(x3)
+        hidden1 = hidden1.view(1,-1)
+        hidden2 = hidden2.view(1,-1)
+        hidden3 = hidden3.view(1,-1)
+        # Feed final hidden state of all three RNN to Linear layer
+        inp_lin = torch.cat((hidden1, hidden2, hidden3), 1)
+        out = self.lin(inp_lin)
+        return out
+
+
+
+
 # model = EmoNet(50, 256, 4, 2).cuda()
+
+# model = SepTurn_RNN(2, 256, 4)

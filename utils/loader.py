@@ -41,13 +41,19 @@ class TweetData(Dataset):
 			return {
 				'input': self.data[idx]['input'],
 				'feature': self.data[idx]['target'],
-				'length': self.data[idx]['length']
+				'length': self.data[idx]['length'],
+				'feature_turn1': self.data[idx]['feature_turn1'],
+				'feature_turn2': self.data[idx]['feature_turn2'],
+				'feature_turn3': self.data[idx]['feature_turn3']
 				}
 		return {
 			'input': self.data[idx]['input'],
 			'target': self.data[idx]['target'],
 			'feature': self.data[idx]['feature'],
-			'length':  self.data[idx]['length']
+			'length':  self.data[idx]['length'],
+			'feature_turn1': self.data[idx]['feature_turn1'],
+			'feature_turn2': self.data[idx]['feature_turn2'],
+			'feature_turn3': self.data[idx]['feature_turn3']
 			}
 
 	def load_gensim(self):
@@ -122,6 +128,11 @@ class TweetData(Dataset):
 					data[index]['target'] = self.lmap[units[4].strip()]
 				data[index]['feature'] = self.text2feature(text)
 				data[index]['length'] = data[index]['feature'].shape[0]
+
+				# Putting seperate turns
+				data[index]['feature_turn1'] = self.text2feature(tokenizer.tokenize(demojify_v4(units[1])))
+				data[index]['feature_turn2'] = self.text2feature(tokenizer.tokenize(demojify_v4(units[2])))
+				data[index]['feature_turn3'] = self.text2feature(tokenizer.tokenize(demojify_v4(units[3])))
 
 		with open(os.path.join(self.data_dir, self.data_file), 'wb') as data_file:
 			# data = json.dump(data, data_file, ensure_ascii=False)

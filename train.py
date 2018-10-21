@@ -159,6 +159,86 @@ def train_batch(**kwargs):
 						'best': state
 						}, savepath,
 						is_best)
+
+
+def train_sepTurn(**kwargs):
+	input_ = kwargs['input']
+	checkpoint = kwargs['checkpoint']
+	savepath = kwargs['savepath']
+	start_epoch = checkpoint['epoch']
+	model = kwargs['model'].to(device)
+	lmap = kwargs['lamp']
+	criterion = kwargs['criterion']
+	optimizer = kwargs['optimizer']
+	nIn = kwargs['nIn']
+
+	eval_object = Eval(lmap)
+	train_subset, val_subset = split(input_, split=0.8, random=True)
+
+	# pdb.set_trace()
+
+	for epoch in range(start_epoch, kwargs['epochs']):
+
+		print('Epochs:[%d]/[%d]'%(epoch, kwargs['epochs']))
+		train_pred =[]
+		avgTrain = AverageMeter("train loss")
+		#actual_samples = 0
+		for idx in trange(len(train_subset)):
+
+			x1 = torch.from_numpy(train_subset[idx]['feature_turn1']).view(-1, 1, nIn).to(device)
+			x2 = torch.from_numpy(train_subset[idx]['feature_turn2']).view(-1, 1, nIn).to(device)
+			x3 = torch.from_numpy(train_subset[idx]['feature_turn3']).view(-1, 1, nIn).to(device)
+
+			target = torch.tensor([train_subset[idx]['target']]).to(device)
+
+			try:
+				out = model(x1, x2, x3)
+				loss = criterion(out, target)
+				optimizer.zero_grad()
+				loss.backward()
+				optimizer.step()
+
+				avgTrain.add(loss)
+				train_pred.append(out)
+				#actual_samples += 1
+			except:
+				pass
+
+			
+
+		train_loss = avgTrain.compute()
+		# train_f1 = eval_object.f1(input_, train_pred, train_subset)
+		# print('\nTrain set: Average loss: {}, F1: ({})\n'.format(train_loss, train_f1))
+		print('\nTrain set: Average loss: {}\n'.format(train_loss))
+
+		avgValidation = AverageMeter("validation loss")
+		val_pred = []
+		for idx in trange(len(val_subset)):
+
+			x1 = torch.from_numpy(val_subset[idx]['feature_turn1']).view(-1, 1, nIn).to(device)
+			x2 = torch.from_numpy(val_subset[idx]['feature_turn2']).view(-1, 1, nIn).to(device)
+			x3 = torch.from_numpy(val_subset[idx]['feature_turn3']).view(-1, 1, nIn).to(device)
+
+			target = torch.tensor([val_subset[idx]['target']]).to(device)
+
+			try:
+				out = model(x1, x2, x3)
+				loss = criterion(out, target)
+
+				val_pred.append(out)
+				avgValidation.add(loss)
+			except:
+				pass
+			
+		validation_loss = avgValidation.compute()
+		# val_f1 = eval_object.f1(input_, val_pred, val_subset)
+		# validation_accuracy = avgAcc.compute()
+		# print('\nValidation set: Average loss: {}, F1: ({})\n'.format(validation_loss, val_f1))
+		print('\nValidation set: Average loss: {}\n'.format(validation_loss))
+
+		## TO DO: F1 Score, log and Saving Checkpoint ##
+
+
 			
 def main(**kwargs):
 	opt = Config()
@@ -173,7 +253,9 @@ def main(**kwargs):
 	for split in splits:
 		datasets[split] = TweetData(path,split,lmap, vector_size = vector_size)
 	# datasets['train'] = pad_seq(datasets['train'])
-	#pdb.set_trace()
+
+	# pdb.set_trace()
+	
 	epochs = opt.epochs
 	nIn = opt.inp
 	nHidden = opt.hidden	
@@ -183,7 +265,9 @@ def main(**kwargs):
 	seqlen = 156
 	# model = EmoNet(nIn, nHidden, nClasses, depth).to(device)
 	# model = RCNN(nIn, nHidden, nClasses, seqlen, filters)
-	model = RCNN_Text(nIn, nHidden)
+	# model = RCNN_Text(nIn, nHidden)
+	model = SepTurn_RNN(nIn, nHidden, nClasses)
+
 	save_dir = opt.save_dir
 	# gmkdir(save_dir)
 	save_file = opt.save_file
@@ -206,14 +290,26 @@ def main(**kwargs):
 	gmkdir('logs')
 	logging.basicConfig(filename="logs/%s.log"%save_file, level=logging.INFO)
 
-	train_batch(input=datasets['train'],
+	# train_batch(input=datasets['train'],
+	# model=model,
+	# lamp=lmap,
+	# epochs=epochs,
+	# checkpoint=checkpoint,
+	# savepath=savepath,
+	# optimizer=optimizer,
+	# criterion=criterion)
+
+	train_sepTurn(input=datasets['train'],
 	model=model,
 	lamp=lmap,
 	epochs=epochs,
 	checkpoint=checkpoint,
 	savepath=savepath,
 	optimizer=optimizer,
-	criterion=criterion)
+	criterion=criterion,
+	nIn=nIn)
+
+	
 
 
     
