@@ -12,7 +12,7 @@ from config.opts import Config
 from model.model import *
 from utils.loader import *
 from utils.utils import *
-
+  
 import warnings
 warnings.filterwarnings("ignore")
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
