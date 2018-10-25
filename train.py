@@ -133,7 +133,9 @@ def train_batch(**kwargs):
 				input_feature = batch['feature'].to(device)
 				target = batch['target'].to(device)
 				output = model(input_feature)
+				pdb.set_trace()
 				prediction = output.contiguous()
+
 				loss = criterion(prediction, target)
 				f1 = eval_object.f1(prediction, target)
 				avgLoss.add(loss.item())
@@ -159,7 +161,8 @@ def train_batch(**kwargs):
 						'best': state
 						}, savepath,
 						is_best)
-			
+
+
 def main(**kwargs):
 	opt = Config()
 	opt._parse(kwargs)
@@ -173,7 +176,7 @@ def main(**kwargs):
 	for split in splits:
 		datasets[split] = TweetData(path,split,lmap, vector_size = vector_size)
 	# datasets['train'] = pad_seq(datasets['train'])
-	pdb.set_trace()
+	# pdb.set_trace()
 	epochs = opt.epochs
 	nIn = opt.inp
 	nHidden = opt.hidden	

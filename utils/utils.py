@@ -24,7 +24,21 @@ def split(samples, **kwargs):
     train_indices = indices[current:current+train_count]
     current += train_count
     test_indices = indices[current:]
-    return list(map(lambda i: samples[i], train_indices)), list(map(lambda i: samples[i], test_indices))
+    # pdb.set_trace()
+    train_subset, test_subset = [], []
+    for i in train_indices:
+        try:
+            train_subset.append(samples[i])
+        except Exception as e:
+            pass
+    for i in test_indices:
+        try:
+            test_subset.append(samples[i])
+        except Exception as e:
+            pass
+    # train_subset = [samples[i] for i in train_indices]
+    # test_subset = [samples[i] for i in test_indices]
+    return train_subset, test_subset
 
 def save_checkpoint(state, filename, is_best):
     """Save checkpoint if a new best is achieved"""

@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 from nltk.tokenize import TweetTokenizer
 from .embeddings import *
 from .emoji_handler import *
-
+import torch
 class TweetData(Dataset):
 	def __init__(self, data_dir, split, lmap, **kwargs):
 		super().__init__()
@@ -153,8 +153,46 @@ class TweetData(Dataset):
 			pickle.dump(vocab, vocab_file)
 		self._load_vocab()
 
-# datasets = {}
-# datasets['train'] = TweetData(
-# data_dir='data',
-# split='train'
-# )
+
+from .preproc import Preprocess
+
+class TweetData_V02(Dataset):
+	def __init__(self, path, label_map):
+		self.path = path
+		self.lmap = label_map
+		self.glove_model = KeyedVectors.load_word2vec_format('data/gensim_glove_25d_vectors.txt', 
+														binary=False)
+		with open(self.path, 'r') as f:
+			self.lines = f.readlines()
+		self.data = defaultdict(dict)
+	def __len__(self):
+		return len(self.lines)
+
+	def __getitem__(self, idx):
+		line = self.lines[idx+1]
+		units = line.split('\t')
+		input_ = units[1:4]
+		target_ = self.lmap[units[4].strip()]
+		return {
+				'input': self.preprocess(input_),
+				'target': target_
+		}
+
+	def preprocess(self, x):
+		pre = Preprocess(self.glove_model)
+		feature = list(map(pre, x))
+		return feature
+
+lmap = {'happy': 0,
+	    'sad': 1,
+	    'angry': 2,
+	    'others': 3
+          }
+# from model.model import Turnip
+
+# turnip = Turnip(25, 256).cuda()
+
+# x = [torch.Tensor(loader[0]['input'][i]).unsqueeze(1).cuda() for i in range(len(loader[0]['input']))]
+# # x = torch.Tensor(loader[0]['input']).unsqueeze(1).cuda()
+# turnip(x)
+# # pdb.set_trace()
