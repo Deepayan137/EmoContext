@@ -40,7 +40,7 @@ class TweetData(Dataset):
 		if self.split == 'test':
 			return {
 				'input': self.data[idx]['input'],
-				'feature': self.data[idx]['target'],
+				'feature': self.data[idx]['feature'],
 				'length': self.data[idx]['length'],
 				'feature_turn1': self.data[idx]['feature_turn1'],
 				'feature_turn2': self.data[idx]['feature_turn2'],
