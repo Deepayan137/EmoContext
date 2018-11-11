@@ -169,10 +169,18 @@ class TweetData_V02(Dataset):
 		return len(self.lines)
 
 	def __getitem__(self, idx):
-		line = self.lines[idx+1]
+		if idx == len(self.lines)-1:
+			line = self.lines[idx]
+		else:
+			line = self.lines[idx+1]
 		units = line.split('\t')
+		# pdb.set_trace()
 		input_ = units[1:4]
-		target_ = self.lmap[units[4].strip()]
+		if len(units) < 5:
+			units.append('')
+		# target_ = self.lmap[units[4].strip()]
+		# pdb.set_trace()
+		target_ = self.lmap.get(units[-1].strip(), 0)
 		return {
 				'input': self.preprocess(input_),
 				'target': target_

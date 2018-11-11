@@ -162,6 +162,57 @@ class EmoNet(nn.Module):
         output = self.fc_out(output[-1])
         return output
 
+class Turnip(nn.Module):
+    def __init__(self, nIn, nHidden, nOut, depth):
+        super(Turnip, self).__init__()
+
+        C = 4
+        Ci = 1
+        Co = 100
+        Ks = [3, 4, 5]
+        # self.rnn = SimpleLSTM(nIn, nHidden)
+        self.fc_in = SimpleLinear(nIn, nHidden*2)
+        self.hidden_layers = [SimpleLSTM(nHidden*2, nHidden)for i in range(depth)]
+        self.hidden_layers = nn.Sequential(*self.hidden_layers)
+
+        self.conv13 = nn.Conv2d(Ci, Co, (3, 2*nHidden))
+        self.conv14 = nn.Conv2d(Ci, Co, (4, 2*nHidden))
+        self.conv15 = nn.Conv2d(Ci, Co, (5, 2*nHidden))
+
+        self.dropout = nn.Dropout(0.5)
+        # self.fc_out =  nn.Linear(nHidden*2*3, nOut)
+        fc_1 = nn.Linear(900, 300)
+        fc_2 = nn.Linear(300, 100)
+        fc_3 = nn.Linear(100, 4)
+        self.fc_out = nn.Sequential(fc_1, fc_2, fc_3)
+        # self.rcnn = (RCNN_Text(nIn, nHidden))
+        # self.rcnn = nn.Sequential(*list(self.rcnn.children())[:-1])
+
+    def conv_and_pool(self, x, conv):
+        x = F.relu(conv(x)).squeeze(3)  # (N, Co, W)
+        x = F.max_pool1d(x, x.size(2)).squeeze(2)
+        return x
+    def forward(self, x):
+        list_ = []
+        for i in range(len(x)):
+            x[i] = self.fc_in(x[i])
+            x[i] = x[i].permute(1, 0, 2)
+            x[i] = self.hidden_layers(x[i])
+            x[i] = x[i].permute(1, 0, 2)
+            x[i] = x[i].unsqueeze(1)
+            x1 = self.conv_and_pool(x[i],self.conv13) #(N,Co)
+            x2 = self.conv_and_pool(x[i],self.conv14) #(N,Co)
+            x3 = self.conv_and_pool(x[i],self.conv15) #(N,Co)
+            z = torch.cat((x1, x2, x3), 1)  # (N,len(Ks)*Co)
+            z = self.dropout(z)
+            # list_.append(self.hidden_layers(x[i])[-1])
+            list_.append(z)
+        # pdb.set_trace()
+        out = torch.cat(list_, 1)
+        # pdb.set_trace()
+        out = self.fc_out(out)
+        return out
+
 class RCNN_Text(nn.Module):
     
     def __init__(self, nIn, nHidden):
