@@ -1,77 +1,103 @@
-backcall==0.1.0
-bleach==3.0.2
-boto==2.49.0
-boto3==1.9.14
-botocore==1.12.14
-bz2file==0.98
-certifi==2018.8.24
-cffi==1.11.5
-chardet==3.0.4
-cycler==0.10.0
-decorator==4.3.0
-defusedxml==0.5.0
-docutils==0.14
-entrypoints==0.2.3
-fire==0.1.3
-gensim==3.6.0
-idna==2.7
-ipykernel==5.1.0
-ipython==7.0.1
-ipython-genutils==0.2.0
-ipywidgets==7.4.2
-jedi==0.13.1
-Jinja2==2.10
-jmespath==0.9.3
-jsonschema==2.6.0
-jupyter==1.0.0
-jupyter-client==5.2.3
-jupyter-console==6.0.0
-jupyter-core==4.4.0
-kiwisolver==1.0.1
-MarkupSafe==1.0
-matplotlib==3.0.0
-mistune==0.8.4
-nbconvert==5.4.0
-nbformat==4.4.0
-nltk==3.3
-notebook==5.7.0
-numpy==1.15.2
-opencv-python==3.4.3.18
-pandas==0.23.4
-pandocfilters==1.4.2
-parso==0.3.1
-pexpect==4.6.0
-pickleshare==0.7.5
-Pillow==5.2.0
-prometheus-client==0.4.2
-prompt-toolkit==2.0.6
-ptyprocess==0.6.0
-pycparser==2.19
-Pygments==2.2.0
-pyparsing==2.2.2
-python-dateutil==2.7.3
-pytz==2018.5
-pyzmq==17.1.2
-qtconsole==4.4.2
-requests==2.19.1
-s3transfer==0.1.13
-scikit-learn==0.20.0
-scipy==1.1.0
-seaborn==0.9.0
-Send2Trash==1.5.0
-simplegeneric==0.8.1
-six==1.11.0
-sklearn==0.0
-smart-open==1.7.1
-terminado==0.8.1
-testpath==0.4.2
-tokenizer==1.0.1
-torch==0.4.1.post2
-torchvision==0.2.1
-tornado==5.1.1
-tqdm==4.26.0
-traitlets==4.3.2
-urllib3==1.23
-wcwidth==0.1.7
-webencodings==0.5.1
-widgetsnbextension==3.4.2
+name: emocon
+channels:
+- pytorch
+- conda-forge
+- anaconda
+- soumith
+- defaults
+dependencies:
+- asn1crypto=0.24.0=py36_0
+- backcall=0.1.0=py36_0
+- bleach=3.0.2=py36_0
+- boto=2.49.0=py36_0
+- boto3=1.9.35=py36_0
+- botocore=1.12.35=py36_0
+- cryptography=2.3.1=py36h1ba5d50_2
+- decorator=4.3.0=py36_0
+- docutils=0.14=py36_0
+- entrypoints=0.2.3=py36_2
+- gensim=3.4.0=py36h14c3975_0
+- gmp=6.1.2=hb3b607b_0
+- idna=2.7=py36_0
+- ipykernel=5.1.0=py36h39e3cac_0
+- ipython=7.1.1=py36h39e3cac_0
+- ipython_genutils=0.2.0=py36_0
+- jedi=0.13.1=py36_0
+- jinja2=2.10=py36_0
+- jmespath=0.9.3=py36_0
+- jsonschema=2.6.0=py36_0
+- jupyter_client=5.2.3=py36_0
+- jupyter_core=4.4.0=py36_0
+- libsodium=1.0.16=h1bed415_0
+- markupsafe=1.0=py36h14c3975_1
+- mistune=0.8.4=py36h7b6447c_0
+- nbconvert=5.3.1=py36_0
+- nbformat=4.4.0=py36_0
+- notebook=5.7.0=py36_0
+- pandoc=2.2.3.2=0
+- pandocfilters=1.4.2=py36_1
+- parso=0.3.1=py36_0
+- pexpect=4.6.0=py36_0
+- pickleshare=0.7.5=py36_0
+- prometheus_client=0.4.2=py36_0
+- prompt_toolkit=2.0.7=py36_0
+- ptyprocess=0.6.0=py36_0
+- pygments=2.2.0=py36_0
+- pyopenssl=18.0.0=py36_0
+- pysocks=1.6.8=py36_0
+- python-dateutil=2.7.5=py36_0
+- pyzmq=17.1.2=py36h14c3975_0
+- requests=2.14.2=py36_0
+- s3transfer=0.1.13=py36_0
+- scikit-learn=0.20.0=py36h4989274_1
+- scipy=1.1.0=py36hfa4b5c9_1
+- send2trash=1.5.0=py36_0
+- smart_open=1.7.1=py36_0
+- terminado=0.8.1=py36_1
+- testpath=0.4.2=py36_0
+- tornado=5.1.1=py36h7b6447c_0
+- traitlets=4.3.2=py36_0
+- urllib3=1.24.1=py36_0
+- wcwidth=0.1.7=py36_0
+- webencodings=0.5.1=py36_1
+- zeromq=4.2.5=hf484d3e_1
+- fire=0.1.3=py_1
+- blas=1.0=mkl
+- ca-certificates=2018.03.07=0
+- certifi=2018.10.15=py36_0
+- cffi=1.11.5=py36he75722e_1
+- freetype=2.9.1=h8a8886c_1
+- intel-openmp=2019.0=118
+- jpeg=9b=h024ee3a_2
+- libedit=3.1.20170329=h6b74fdf_2
+- libffi=3.2.1=hd88cf55_4
+- libgcc-ng=8.2.0=hdf63c60_1
+- libgfortran-ng=7.3.0=hdf63c60_0
+- libpng=1.6.35=hbc83047_0
+- libstdcxx-ng=8.2.0=hdf63c60_1
+- libtiff=4.0.9=he85c1e1_2
+- mkl=2019.0=118
+- mkl_fft=1.0.6=py36h7dd41cf_0
+- mkl_random=1.0.1=py36h4414c95_1
+- ncurses=6.1=hf484d3e_0
+- ninja=1.8.2=py36h6bb024c_1
+- numpy=1.15.4=py36h1d66e8a_0
+- numpy-base=1.15.4=py36h81de0dd_0
+- olefile=0.46=py36_0
+- openssl=1.1.1=h7b6447c_0
+- pillow=5.3.0=py36h34e0f95_0
+- pip=18.1=py36_0
+- pycparser=2.19=py36_0
+- python=3.6.7=h0371630_0
+- readline=7.0=h7b6447c_5
+- setuptools=40.5.0=py36_0
+- six=1.11.0=py36_1
+- sqlite=3.25.2=h7b6447c_0
+- tk=8.6.8=hbc83047_0
+- wheel=0.32.2=py36_0
+- xz=5.2.4=h14c3975_4
+- zlib=1.2.11=ha838bed_2
+- pytorch=0.4.1=py36_py35_py27__9.0.176_7.1.2_2
+- torchvision=0.2.1=py36_1
+prefix: /home/deepayan/miniconda3/envs/emocon
+
