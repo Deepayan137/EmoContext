@@ -3,7 +3,7 @@ Course project for IRE 2018
 
 * Deep learning based Emotion detection in text using self attentive Bi-LSTMs
 
-##3 Requirements
+## 3 Requirements
 
 * python 3.5+
 * pytorch 0.4
