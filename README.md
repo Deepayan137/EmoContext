@@ -1,7 +1,7 @@
 ## EmoContext
 Course project for IRE 2018
 
-
+* Deep learning based Emotion detection in text using self attentive Bi-LSTMs
 
 ##3 Requirements
 
