@@ -50,4 +50,6 @@ def demojify_v4(text):
 				except:
 					output.append(e)
 
+
 	return ' '.join(output)
+

@@ -6,9 +6,10 @@ import pickle
 from tqdm import *
 from collections import defaultdict
 from torch.utils.data import Dataset
-from nltk.tokenize import TweetTokenizer
 from .embeddings import *
 from .emoji_handler import *
+import torch
+
 
 class TweetData(Dataset):
 	def __init__(self, data_dir, split, lmap, **kwargs):
@@ -40,11 +41,10 @@ class TweetData(Dataset):
 		if self.split == 'test':
 			return {
 				'input': self.data[idx]['input'],
-				'feature': self.data[idx]['target'],
-				'length': self.data[idx]['length'],
-				'feature_turn1': self.data[idx]['feature_turn1'],
-				'feature_turn2': self.data[idx]['feature_turn2'],
-				'feature_turn3': self.data[idx]['feature_turn3']
+
+				'feature': self.data[idx]['feature'],
+				'length': self.data[idx]['length']
+
 				}
 		return {
 			'input': self.data[idx]['input'],
@@ -164,8 +164,55 @@ class TweetData(Dataset):
 			pickle.dump(vocab, vocab_file)
 		self._load_vocab()
 
-# datasets = {}
-# datasets['train'] = TweetData(
-# data_dir='data',
-# split='train'
-# )
+
+from .preproc import Preprocess
+
+class TweetData_V02(Dataset):
+	def __init__(self, path, label_map, dim):
+		self.path = path
+		self.lmap = label_map
+		self.dim = dim
+		self.glove_model = KeyedVectors.load_word2vec_format('data/gensim_glove_{}d_vectors.txt'.format(dim), 
+														binary=False)
+		with open(self.path, 'r') as f:
+			self.lines = f.readlines()
+		self.data = defaultdict(dict)
+	def __len__(self):
+		return len(self.lines)
+
+	def __getitem__(self, idx):
+		if idx == len(self.lines)-1:
+			line = self.lines[idx]
+		else:
+			line = self.lines[idx+1]
+		units = line.split('\t')
+		# pdb.set_trace()
+		input_ = units[1:4]
+		if len(units) < 5:
+			units.append('')
+		# target_ = self.lmap[units[4].strip()]
+		# pdb.set_trace()
+		target_ = self.lmap.get(units[-1].strip(), 0)
+		return {
+				'input': self.preprocess(input_),
+				'target': target_
+		}
+
+	def preprocess(self, x):
+		pre = Preprocess(self.glove_model, self.dim)
+		feature = list(map(pre, x))
+		return feature
+
+lmap = {'happy': 0,
+	    'sad': 1,
+	    'angry': 2,
+	    'others': 3
+          }
+# from model.model import Turnip
+
+# turnip = Turnip(25, 256).cuda()
+
+# x = [torch.Tensor(loader[0]['input'][i]).unsqueeze(1).cuda() for i in range(len(loader[0]['input']))]
+# # x = torch.Tensor(loader[0]['input']).unsqueeze(1).cuda()
+# turnip(x)
+# # pdb.set_trace()

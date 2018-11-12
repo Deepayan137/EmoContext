@@ -10,9 +10,10 @@ from torch.utils.data import DataLoader
 
 from config.opts import Config
 from model.model import *
+from model.model_attn import *
 from utils.loader import *
 from utils.utils import *
-
+  
 import warnings
 warnings.filterwarnings("ignore")
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -133,7 +134,9 @@ def train_batch(**kwargs):
 				input_feature = batch['feature'].to(device)
 				target = batch['target'].to(device)
 				output = model(input_feature)
+				pdb.set_trace()
 				prediction = output.contiguous()
+
 				loss = criterion(prediction, target)
 				f1 = eval_object.f1(prediction, target)
 				avgLoss.add(loss.item())
@@ -239,7 +242,7 @@ def train_sepTurn(**kwargs):
 		## TO DO: F1 Score, log and Saving Checkpoint ##
 
 
-			
+
 def main(**kwargs):
 	opt = Config()
 	opt._parse(kwargs)
@@ -254,7 +257,6 @@ def main(**kwargs):
 		datasets[split] = TweetData(path,split,lmap, vector_size = vector_size)
 	# datasets['train'] = pad_seq(datasets['train'])
 
-	# pdb.set_trace()
 	
 	epochs = opt.epochs
 	nIn = opt.inp
@@ -263,10 +265,9 @@ def main(**kwargs):
 	depth = opt.depth
 	filters = opt.filters
 	seqlen = 156
-	# model = EmoNet(nIn, nHidden, nClasses, depth).to(device)
-	# model = RCNN(nIn, nHidden, nClasses, seqlen, filters)
+	# model = WordEncoder(nIn, nHidden, nClasses, depth).to(device)
+	model = RCNN(nIn, nHidden, nClasses, seqlen, filters)
 	# model = RCNN_Text(nIn, nHidden)
-	model = SepTurn_RNN(nIn, nHidden, nClasses)
 
 	save_dir = opt.save_dir
 	# gmkdir(save_dir)
