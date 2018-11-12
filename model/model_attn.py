@@ -79,7 +79,22 @@ class RNN_Embeddings(nn.Module):
         sent_embedding = torch.bmm(attn_weight_matrix, x)
         sent_embedding = sent_embedding.squeeze(1)
         return sent_embedding
+class RNN_attn(nn.Module):
+    def __init__(self, nIn, nHidden, nOut, depth):
+        super(RNN_attn, self).__init__()
+        span = 10
+        self.sent_embedding = RNN_Embeddings(nIn, nHidden, depth, span)
+        self.fc_out = nn.Linear(nHidden*2*3*span, 4)
 
+    def forward(self, x):
+        rnn_feat = []
+        for i in range(len(x)):
+            hidden_matrix_rnn = self.sent_embedding(x[i])
+            rnn_feat.append(hidden_matrix_rnn)
+        rnn_out = torch.cat(rnn_feat, 1)
+        rnn_out = rnn_out.view(rnn_out.size(0), -1)
+        out  = self.fc_out(rnn_out)
+        return out   
 class WordEncoder(nn.Module):
     def __init__(self, nIn, nHidden, nOut, depth):
         super(WordEncoder, self).__init__()

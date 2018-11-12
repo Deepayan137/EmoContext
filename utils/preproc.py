@@ -2,16 +2,16 @@ import os
 import pdb
 import numpy as np
 import re, string
-from nltk.corpus import stopwords
+# from nltk.corpus import stopwords
 from tokenizer.tokenizer import TweetTokenizer
 from .emoji_handler import *
 
 class Preprocess:
-	def __init__(self,  glove_model):
+	def __init__(self,  glove_model, dim):
 		'''takes tokenized text'''
 		self.model = glove_model
 		self.tok = self.build_tokenizer()
-		
+		self.dim = dim
 		
 
 	def __call__(self, x):
@@ -65,7 +65,7 @@ class Preprocess:
 				embed_mat.append(self.model.get_vector(word))
 				
 			else:
-				embed_mat.append(np.zeros(25, dtype=np.float32))
+				embed_mat.append(np.zeros(self.dim, dtype=np.float32))
 		return self.pad_seq(np.asarray(embed_mat))
 
 	

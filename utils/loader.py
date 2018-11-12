@@ -6,10 +6,11 @@ import pickle
 from tqdm import *
 from collections import defaultdict
 from torch.utils.data import Dataset
-from nltk.tokenize import TweetTokenizer
 from .embeddings import *
 from .emoji_handler import *
 import torch
+
+
 class TweetData(Dataset):
 	def __init__(self, data_dir, split, lmap, **kwargs):
 		super().__init__()
@@ -157,10 +158,11 @@ class TweetData(Dataset):
 from .preproc import Preprocess
 
 class TweetData_V02(Dataset):
-	def __init__(self, path, label_map):
+	def __init__(self, path, label_map, dim):
 		self.path = path
 		self.lmap = label_map
-		self.glove_model = KeyedVectors.load_word2vec_format('data/gensim_glove_25d_vectors.txt', 
+		self.dim = dim
+		self.glove_model = KeyedVectors.load_word2vec_format('data/gensim_glove_{}d_vectors.txt'.format(dim), 
 														binary=False)
 		with open(self.path, 'r') as f:
 			self.lines = f.readlines()
@@ -187,7 +189,7 @@ class TweetData_V02(Dataset):
 		}
 
 	def preprocess(self, x):
-		pre = Preprocess(self.glove_model)
+		pre = Preprocess(self.glove_model, self.dim)
 		feature = list(map(pre, x))
 		return feature
 
