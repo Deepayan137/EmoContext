@@ -36,12 +36,5 @@ python3 -m train_sep_turns.py
 
 ```
 
-### Model
-
-![Sent_embeding](https://drive.google.com/drive/u/0/folders/1S-CeFBVEEg9Z3tmSSzklhw2EIgwaUCR_)
-
-Self attentive neural net for Sentenc embedding
-
-![Network](https://drive.google.com/open?id=1JvdbgmpPXG6pMxCLtTJBAyNw2xKNMMCR)
 
 ### For more info please visit ![Project page](https://deepayan137.github.io/category/projects.html)
