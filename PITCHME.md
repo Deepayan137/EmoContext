@@ -31,12 +31,10 @@ whose output dimension is equal to the number of output classes.
 ---
 
 ## Result
-
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg .tg-baqh{text-align:center;vertical-align:top}
 .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
 .tg .tg-uys7{border-color:inherit;text-align:center}
 </style>
@@ -49,16 +47,16 @@ whose output dimension is equal to the number of output classes.
     <th class="tg-c3ow" colspan="3">Angry</th>
   </tr>
   <tr>
-    <td class="tg-baqh"></td>
-    <td class="tg-baqh">Precision</td>
-    <td class="tg-baqh">Recall</td>
-    <td class="tg-baqh">F1</td>
-    <td class="tg-baqh">Precision</td>
-    <td class="tg-baqh">Recall</td>
-    <td class="tg-baqh">F1</td>
-    <td class="tg-baqh">Precision</td>
-    <td class="tg-baqh">Recall</td>
-    <td class="tg-baqh">F1</td>
+    <td class="tg-c3ow"></td>
+    <td class="tg-c3ow">Precision</td>
+    <td class="tg-c3ow">Recall</td>
+    <td class="tg-c3ow">F1</td>
+    <td class="tg-c3ow">Precision</td>
+    <td class="tg-c3ow">Recall</td>
+    <td class="tg-c3ow">F1</td>
+    <td class="tg-c3ow">Precision</td>
+    <td class="tg-c3ow">Recall</td>
+    <td class="tg-c3ow">F1</td>
   </tr>
   <tr>
     <td class="tg-uys7">SS-LSTM</td>
@@ -73,16 +71,16 @@ whose output dimension is equal to the number of output classes.
     <td class="tg-c3ow">71.34</td>
   </tr>
   <tr>
-    <td class="tg-uys7"><br>2-BiLSTM<br>+<br>attn</td>
+    <td class="tg-uys7">2-BiLST+ attn</td>
     <td class="tg-uys7">65.05</td>
     <td class="tg-uys7">76.06</td>
-    <td class="tg-uys7"><br>70.13</td>
-    <td class="tg-c3ow"><br><br>68.09</td>
-    <td class="tg-c3ow"><br><br>76.80</td>
-    <td class="tg-c3ow"><br><br>72.18</td>
-    <td class="tg-c3ow"><br><br>60.56</td>
-    <td class="tg-c3ow"><br><br>76.06</td>
-    <td class="tg-c3ow"><br><br>71.07</td>
+    <td class="tg-uys7">70.13</td>
+    <td class="tg-c3ow"><br>71.52</td>
+    <td class="tg-c3ow"><br>76.80</td>
+    <td class="tg-c3ow"><br>72.18</td>
+    <td class="tg-c3ow"><br>60.56</td>
+    <td class="tg-c3ow"><br>76.06</td>
+    <td class="tg-c3ow"><br>71.07</td>
   </tr>
 </table>
  ---
@@ -94,6 +92,6 @@ We compared our work with the SS-LSTM presented in the paper ![Sentiment semanti
 The average F1-scores are as follows:
 
  * SS-LSTM: 71.34
- * Ours = 71.08 
+ * Ours: 71.08 
 
 
