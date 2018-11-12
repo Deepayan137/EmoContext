@@ -17,14 +17,14 @@ pip install -r requirements
 
 ### Usage
 
-'''
+```
 python3 -m train_sep_turns.py 
 
-'''
+```
 
 ### Parameters
 
-'''
+```
 --inp=25(default) word embedding size
 --lr = 1e-3
 --inp = 25
@@ -34,7 +34,7 @@ python3 -m train_sep_turns.py
 --epochs = 20
 --filters = 100
 
-'''
+```
 
 ### Model
 
