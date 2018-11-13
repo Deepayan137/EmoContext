@@ -38,7 +38,7 @@ python3 -m train_sep_turns.py
 ```
 
 
-### For more info please visit ![Project page](https://deepayan137.github.io/category/projects.html)
+### For more info please visit [Project page](https://deepayan137.github.io/category/projects.html)
 
 Download pretrained Glove Word Embeddings from http://nlp.stanford.edu/data/glove.twitter.27B.zip
 
